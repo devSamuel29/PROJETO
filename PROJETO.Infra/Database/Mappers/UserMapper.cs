@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
+using PROJETO.Domain.Enuns.Role;
 using PROJETO.Domain.Models.User;
 
 namespace PROJETO.Infra.Mappers;
@@ -46,14 +46,16 @@ public class UserMapper : IEntityTypeConfiguration<UserModel>
             .Property(p => p.CreatedAt)
             .HasColumnName("CreatedAt")
             .HasColumnType("datetime2")
-            .IsRequired();
+            .HasDefaultValueSql("GETDATE()");
 
         builder
             .Property(p => p.UpdatedAt)
             .HasColumnName("UpdatedAt")
             .HasColumnType("datetime2")
-            .IsRequired();
-        
+            .HasDefaultValueSql("GETDATE()");
+
+        builder.Property(p => p.RoleId).HasDefaultValue(ERole.user);
+
         builder
             .HasOne(p => p.Role)
             .WithMany(p => p.Users)

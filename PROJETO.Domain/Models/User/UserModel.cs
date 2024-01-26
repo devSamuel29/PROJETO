@@ -12,9 +12,9 @@ public class UserModel
 
     public DateTime BirthDay { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; }
 
     public int RoleId { get; set; }
 
