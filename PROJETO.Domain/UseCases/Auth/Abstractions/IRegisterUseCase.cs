@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-
 using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
 

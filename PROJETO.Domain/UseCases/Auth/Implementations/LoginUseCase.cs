@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-
 using PROJETO.Domain.Request.Auth;
 using PROJETO.Domain.Validators.Auth;
 using PROJETO.Domain.Repositories.Auth;
@@ -19,7 +17,19 @@ public sealed class LoginUseCase : ILoginUseCase
 
     public async Task<ResultIdentity> SignIn(SignInRequest request)
     {
-        JwtIdentity token = await _repository.SignInAsync(request);
-        return new ResultIdentity { IsValid = true, Data = token };
+        try
+        {
+            bool isValid = SignInRequestValidator.ValidateRequest(request);
+            if (isValid)
+            {
+                JwtIdentity token = await _repository.SignInAsync(request);
+                return new ResultIdentity { IsValid = true, Data = token };
+            }
+            return new ResultIdentity { IsValid = false };
+        }
+        catch
+        {
+            throw new Exception();
+        }
     }
 }
