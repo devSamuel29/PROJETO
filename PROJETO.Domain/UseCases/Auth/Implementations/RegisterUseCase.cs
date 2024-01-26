@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-
 using PROJETO.Domain.Identities;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.Request.Auth;
@@ -21,7 +19,7 @@ public sealed class RegisterUseCase : IRegisterUseCase
     {
         try
         {
-            var isValidRequest = SignUpRequestValidator.ValidateRequest(request);
+            bool isValidRequest = SignUpRequestValidator.ValidateRequest(request);
 
             if (isValidRequest)
             {
@@ -32,7 +30,7 @@ public sealed class RegisterUseCase : IRegisterUseCase
                 };
             }
 
-            throw new Exception();
+            return new ResultIdentity { IsValid = false };
         }
         catch
         {
