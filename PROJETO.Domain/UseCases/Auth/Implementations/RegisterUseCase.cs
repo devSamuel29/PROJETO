@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.Request.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
@@ -15,8 +16,8 @@ public sealed class RegisterUseCase : IRegisterUseCase
     {
         _repository = repository;
     }
-    
-    public Task<JwtSecurityToken> SignUp(SignUpRequest request)
+
+    public async Task<ResultIdentity> SignUp(SignUpRequest request)
     {
         try
         {
@@ -24,7 +25,11 @@ public sealed class RegisterUseCase : IRegisterUseCase
 
             if (isValidRequest)
             {
-                return _repository.SignUpAsync(request);
+                return new ResultIdentity
+                {
+                    IsValid = true,
+                    Data = await _repository.SignUpAsync(request)
+                };
             }
 
             throw new Exception();

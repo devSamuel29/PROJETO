@@ -1,9 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
 
 namespace PROJETO.Domain.UseCases.Auth.Abstractions;
 
 public interface ILoginUseCase 
 { 
-    Task<JwtSecurityToken> SignIn(SignInRequest request);
+    Task<ResultIdentity> SignIn(SignInRequest request);
 }

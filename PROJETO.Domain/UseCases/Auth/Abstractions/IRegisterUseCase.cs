@@ -1,9 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
+
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
 
 namespace PROJETO.Domain.UseCases.Auth.Abstractions;
 
 public interface IRegisterUseCase
 {
-    Task<JwtSecurityToken> SignUp(SignUpRequest request);
+    Task<ResultIdentity> SignUp(SignUpRequest request);
 }

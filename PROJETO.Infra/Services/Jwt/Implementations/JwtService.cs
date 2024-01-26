@@ -34,10 +34,7 @@ public class JwtService : IJwtService
             audience: "localhost",
             expires: DateTime.Now.AddMinutes(30),
             claims: authClaim,
-            signingCredentials: new SigningCredentials(
-                securityKey,
-                SecurityAlgorithms.HmacSha256
-            )
+            signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
         );
 
         return token;
@@ -46,5 +43,10 @@ public class JwtService : IJwtService
     public bool ValidateToken()
     {
         throw new NotImplementedException();
+    }
+
+    public string JwtToString(JwtSecurityToken token)
+    {
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
