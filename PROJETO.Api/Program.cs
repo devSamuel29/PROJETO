@@ -14,7 +14,6 @@ using PROJETO.Infra.Services.Jwt.Abstractions;
 using PROJETO.Infra.Services.Jwt.Implementations;
 using PROJETO.Infra.Services.Ecrypters.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Implementations;
-using PROJETO.Domain.Exceptions.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
