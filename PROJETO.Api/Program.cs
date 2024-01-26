@@ -14,6 +14,7 @@ using PROJETO.Infra.Services.Jwt.Abstractions;
 using PROJETO.Infra.Services.Jwt.Implementations;
 using PROJETO.Infra.Services.Ecrypters.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Implementations;
+using PROJETO.Domain.Exceptions.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +25,8 @@ builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
 builder.Services.AddScoped<IRegisterUseCase, RegisterUseCase>();
 
 // SERVICES
-builder.Services.AddTransient<IJwtService, JwtService>();
-builder.Services.AddTransient<IEncrypterService, EncrypterService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IEncrypterService, EncrypterService>();
 
 // REPOSITORIES
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
