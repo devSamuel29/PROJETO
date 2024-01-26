@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Models.User;
 using PROJETO.Domain.Request.Auth;
 using PROJETO.Domain.Adapters.User;
@@ -30,7 +31,7 @@ public sealed class AuthRepository : IAuthRepository
         _jwtService = jwtService;
     }
 
-    public async Task<JwtSecurityToken> SignInAsync(SignInRequest request)
+    public async Task<JwtIdentity> SignInAsync(SignInRequest request)
     {
         try
         {
@@ -48,7 +49,7 @@ public sealed class AuthRepository : IAuthRepository
 
                 List<Claim> userClaims = _jwtService.GenerateClaims(userModel: model);
                 JwtSecurityToken token = _jwtService.GenerateToken(userClaims);
-                return token;
+                return new JwtIdentity { Token = _jwtService.JwtToString(token) };
             }
 
             throw new Exception();
@@ -59,7 +60,7 @@ public sealed class AuthRepository : IAuthRepository
         }
     }
 
-    public async Task<JwtSecurityToken> SignUpAsync(SignUpRequest request)
+    public async Task<JwtIdentity> SignUpAsync(SignUpRequest request)
     {
         try
         {
@@ -69,7 +70,7 @@ public sealed class AuthRepository : IAuthRepository
 
             List<Claim> userClaims = _jwtService.GenerateClaims(userModel: createdUser);
             JwtSecurityToken token = _jwtService.GenerateToken(userClaims);
-            return token;
+            return new JwtIdentity { Token = _jwtService.JwtToString(token) };
         }
         catch
         {

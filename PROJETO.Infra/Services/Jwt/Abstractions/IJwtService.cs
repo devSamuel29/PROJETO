@@ -11,5 +11,7 @@ public interface IJwtService
 
     List<Claim> GenerateClaims(UserModel userModel);
 
+    string JwtToString(JwtSecurityToken token);
+
     bool ValidateToken();
 }
