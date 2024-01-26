@@ -54,7 +54,7 @@ public class UserMapper : IEntityTypeConfiguration<UserModel>
             .HasColumnType("datetime2")
             .HasDefaultValueSql("GETDATE()");
 
-        builder.Property(p => p.RoleId).HasDefaultValue(ERole.user);
+        builder.Property(p => p.RoleId).HasDefaultValue(ERole.User);
 
         builder
             .HasOne(p => p.Role)

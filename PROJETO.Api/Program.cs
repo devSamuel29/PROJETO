@@ -1,19 +1,23 @@
 using System.Text;
 
+using Microsoft.OpenApi.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-using PROJETO.Infra.Database;
-using PROJETO.Infra.Repositories.Auth;
+using PROJETO.Domain.Enuns.Role;
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
 using PROJETO.Domain.UseCases.Auth.Implementations;
-using PROJETO.Infra.DataSources.Abstractions.SqlServer.Auth;
-using PROJETO.Infra.DataSources.Implementations;
+
+using PROJETO.Infra.Database;
+using PROJETO.Infra.Repositories.Auth;
 using PROJETO.Infra.Services.Jwt.Abstractions;
+using PROJETO.Infra.DataSources.Implementations;
 using PROJETO.Infra.Services.Jwt.Implementations;
 using PROJETO.Infra.Services.Ecrypters.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Implementations;
+using PROJETO.Infra.DataSources.Abstractions.SqlServer.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +62,21 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(
+    options =>
+        options.AddPolicy(
+            ERole.Admin.GetDisplayName(),
+            p => p.RequireClaim(PolicyIdentiy.CLAIM_NAME, PolicyIdentiy.USER_CLAIM_NAME)
+        )
+);
+
+builder.Services.AddAuthorization(
+    options =>
+        options.AddPolicy(
+            ERole.User.GetDisplayName(),
+            p => p.RequireClaim(PolicyIdentiy.CLAIM_NAME, PolicyIdentiy.ADMIN_CLAIM_NAME)
+        )
+);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
