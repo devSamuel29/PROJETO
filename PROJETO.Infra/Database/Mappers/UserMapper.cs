@@ -24,6 +24,7 @@ public class UserMapper : IEntityTypeConfiguration<UserModel>
             .HasColumnType("varchar(40)")
             .IsRequired();
 
+        builder.HasIndex(p => p.Email).IsUnique();
         builder
             .Property(p => p.Email)
             .HasColumnName("Email")
