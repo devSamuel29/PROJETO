@@ -1,6 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
-
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
 
@@ -23,12 +22,26 @@ public sealed class AuthController : ControllerBase
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn(SignInRequest signInRequest)
     {
-        return Ok(await _loginUseCase.SignIn(signInRequest));
+        ResultIdentity result = await _loginUseCase.SignIn(signInRequest);
+
+        return result.StatusCode switch
+        {
+            StatusCodeIdentity.SUCCESS => Ok(await _loginUseCase.SignIn(signInRequest)),
+            StatusCodeIdentity.BAD_REQUEST => BadRequest(result.Data),
+            _ => (IActionResult)StatusCode(StatusCodeIdentity.ERROR, result.Data),
+        };
     }
 
     [HttpPost("sign-up")]
-    public async Task<IActionResult> SignUp(SignUpRequest signUpRequest) 
-    { 
-        return Ok(await _registerUseCase.SignUp(request: signUpRequest));
+    public async Task<IActionResult> SignUp(SignUpRequest signUpRequest)
+    {
+        ResultIdentity result = await _registerUseCase.SignUp(signUpRequest);
+
+        return result.StatusCode switch
+        {
+            StatusCodeIdentity.CREATED => Created("localhost", result.Data),
+            StatusCodeIdentity.BAD_REQUEST => BadRequest(result.Data),
+            _ => StatusCode(StatusCodeIdentity.ERROR, result.Data),
+        };
     }
 }
