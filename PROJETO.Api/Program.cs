@@ -9,18 +9,17 @@ using PROJETO.Domain.Identities;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
 using PROJETO.Domain.UseCases.Auth.Implementations;
+using PROJETO.Domain.Validators.Auth.Abstractions;
+using PROJETO.Domain.Validators.Implementations;
 
 using PROJETO.Infra.Database;
+using PROJETO.Infra.DataSources.SqlServer.User.Abstractions;
+using PROJETO.Infra.DataSources.SqlServer.User.Implementations;
 using PROJETO.Infra.Repositories.Auth;
-using PROJETO.Infra.Services.Jwt.Abstractions;
-using PROJETO.Infra.DataSources.Implementations;
-using PROJETO.Infra.Services.Jwt.Implementations;
 using PROJETO.Infra.Services.Ecrypters.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Implementations;
-using PROJETO.Infra.DataSources.Abstractions.SqlServer.Auth;
-using PROJETO.Domain.Validators.Auth.Abstractions;
-using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.Validators.Implementations;
+using PROJETO.Infra.Services.Jwt.Abstractions;
+using PROJETO.Infra.Services.Jwt.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +30,8 @@ builder.Services.AddScoped<ISignInRequestValidator, SignInRequestValidator>();
 builder.Services.AddScoped<ISignUpRequestValidator, SignUpRequestValidator>();
 
 // USE CASES
-builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
-builder.Services.AddScoped<IRegisterUseCase, RegisterUseCase>();
+builder.Services.AddScoped<ISignInUseCase, SignInUseCase>();
+builder.Services.AddScoped<ISignUpUseCase, SignUpUseCase>();
 
 // SERVICES
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -91,8 +90,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
