@@ -1,4 +1,4 @@
-namespace PROJETO.Domain.Exceptions.Auth.Register;
+namespace PROJETO.Domain.Exceptions.Auth.Shared;
 
 public class InvalidPasswordException : AuthException
 {
