@@ -9,24 +9,24 @@ namespace PROJETO.Api.Controllers.Auth;
 [ApiController]
 public sealed class AuthController : ControllerBase
 {
-    private readonly ILoginUseCase _loginUseCase;
+    private readonly ISignInUseCase _signInUseCase;
 
-    private readonly IRegisterUseCase _registerUseCase;
+    private readonly ISignUpUseCase _signUpUseCase;
 
-    public AuthController(ILoginUseCase loginUseCase, IRegisterUseCase registerUseCase)
+    public AuthController(ISignInUseCase loginUseCase, ISignUpUseCase registerUseCase)
     {
-        _loginUseCase = loginUseCase;
-        _registerUseCase = registerUseCase;
+        _signInUseCase = loginUseCase;
+        _signUpUseCase = registerUseCase;
     }
 
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn(SignInRequest signInRequest)
     {
-        ResultIdentity result = await _loginUseCase.SignIn(signInRequest);
+        ResultIdentity result = await _signInUseCase.SignIn(signInRequest);
 
         return result.StatusCode switch
         {
-            StatusCodeIdentity.SUCCESS => Ok(await _loginUseCase.SignIn(signInRequest)),
+            StatusCodeIdentity.SUCCESS => Ok(result.Data),
             StatusCodeIdentity.BAD_REQUEST => BadRequest(result.Data),
             _ => (IActionResult)StatusCode(StatusCodeIdentity.ERROR, result.Data),
         };
@@ -35,7 +35,7 @@ public sealed class AuthController : ControllerBase
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp(SignUpRequest signUpRequest)
     {
-        ResultIdentity result = await _registerUseCase.SignUp(signUpRequest);
+        ResultIdentity result = await _signUpUseCase.SignUp(signUpRequest);
 
         return result.StatusCode switch
         {
