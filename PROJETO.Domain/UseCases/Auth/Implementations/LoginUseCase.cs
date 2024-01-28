@@ -3,30 +3,36 @@ using PROJETO.Domain.Request.Auth;
 using PROJETO.Domain.Exceptions.Auth;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
-using PROJETO.Domain.Validators.Auth;
+using PROJETO.Domain.Validators.Auth.Abstractions;
 
 namespace PROJETO.Domain.UseCases.Auth.Implementations;
 
 public sealed class LoginUseCase : ILoginUseCase
 {
-    public IAuthRepository _repository;
+    private readonly IAuthRepository _repository;
 
-    public LoginUseCase(IAuthRepository repository)
+    private readonly ISignInRequestValidator _signInRequestValidator;
+
+    public LoginUseCase(
+        IAuthRepository repository,
+        ISignInRequestValidator signInRequestValidator
+    )
     {
         _repository = repository;
+        _signInRequestValidator = signInRequestValidator;
     }
 
     public async Task<ResultIdentity> SignIn(SignInRequest request)
     {
         try
         {
-            SignInRequestValidator.ValidateRequest(request);
+            _signInRequestValidator.ValidateRequest(request);
 
             JwtIdentity token = await _repository.SignInAsync(request);
             return new ResultIdentity
             {
                 StatusCode = StatusCodeIdentity.SUCCESS,
-                Data = token
+                Data = token.Token
             };
         }
         catch (AuthException e)
