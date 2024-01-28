@@ -18,10 +18,17 @@ using PROJETO.Infra.Services.Jwt.Implementations;
 using PROJETO.Infra.Services.Ecrypters.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Implementations;
 using PROJETO.Infra.DataSources.Abstractions.SqlServer.Auth;
+using PROJETO.Domain.Validators.Auth.Abstractions;
+using PROJETO.Domain.Request.Auth;
+using PROJETO.Domain.Validators.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<SqlServerContext>();
+
+// VALIDATORS
+builder.Services.AddScoped<ISignInRequestValidator, SignInRequestValidator>();
+builder.Services.AddScoped<ISignUpRequestValidator, SignUpRequestValidator>();
 
 // USE CASES
 builder.Services.AddScoped<ILoginUseCase, LoginUseCase>();
