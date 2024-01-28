@@ -1,14 +1,18 @@
 using System.Text.RegularExpressions;
-using PROJETO.Domain.Exceptions.Auth.Register;
+
 using PROJETO.Domain.Request.Auth;
+using PROJETO.Domain.Exceptions.Auth.Shared;
 
 namespace PROJETO.Domain.Validators.Auth;
 
 public static class SignUpRequestValidator
 {
-    public static bool ValidateRequest(SignUpRequest request)
+    public static void ValidateRequest(SignUpRequest request)
     {
-        bool isValidBase64Password = Regex.IsMatch(request.Password, AuthRegex.BASE_64_REGEX);
+        bool isValidBase64Password = Regex.IsMatch(
+            request.Password,
+            AuthRegex.BASE_64_REGEX
+        );
 
         if (!isValidBase64Password)
             throw new Base64Exception();
@@ -27,12 +31,18 @@ public static class SignUpRequestValidator
         if (request.Password.Length > maximumPasswordLenght)
             throw new InvalidPasswordException();
 
-        bool hasNumberInPassword = Regex.IsMatch(request.Password, AuthRegex.NUMBER_REGEX);
+        bool hasNumberInPassword = Regex.IsMatch(
+            request.Password,
+            AuthRegex.NUMBER_REGEX
+        );
 
         if (!hasNumberInPassword)
             throw new InvalidPasswordException();
 
-        bool hasSpecialChar = Regex.IsMatch(request.Password, AuthRegex.SPECIAL_CHARACTER_REGEX);
+        bool hasSpecialChar = Regex.IsMatch(
+            request.Password,
+            AuthRegex.SPECIAL_CHARACTER_REGEX
+        );
 
         if (!hasSpecialChar)
             throw new InvalidPasswordException();
@@ -72,7 +82,5 @@ public static class SignUpRequestValidator
 
         if (request.BirthDay > maxData)
             throw new Exception();
-
-        return true;
     }
 }

@@ -1,8 +1,9 @@
+using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.Validators.Auth;
+using PROJETO.Domain.Exceptions.Auth;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
-using PROJETO.Domain.Identities;
+using PROJETO.Domain.Validators.Auth;
 
 namespace PROJETO.Domain.UseCases.Auth.Implementations;
 
@@ -19,17 +20,22 @@ public sealed class LoginUseCase : ILoginUseCase
     {
         try
         {
-            bool isValid = SignInRequestValidator.ValidateRequest(request);
-            if (isValid)
+            SignInRequestValidator.ValidateRequest(request);
+
+            JwtIdentity token = await _repository.SignInAsync(request);
+            return new ResultIdentity
             {
-                JwtIdentity token = await _repository.SignInAsync(request);
-                return new ResultIdentity { IsValid = true, Data = token };
-            }
-            return new ResultIdentity { IsValid = false };
+                StatusCode = StatusCodeIdentity.SUCCESS,
+                Data = token
+            };
         }
-        catch
+        catch (AuthException e)
         {
-            throw new Exception();
+            return new ResultIdentity
+            {
+                StatusCode = StatusCodeIdentity.BAD_REQUEST,
+                Data = e.Message
+            };
         }
     }
 }

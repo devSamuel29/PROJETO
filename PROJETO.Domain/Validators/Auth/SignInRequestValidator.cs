@@ -1,14 +1,18 @@
 using System.Text.RegularExpressions;
-using PROJETO.Domain.Exceptions.Auth.Register;
+
 using PROJETO.Domain.Request.Auth;
+using PROJETO.Domain.Exceptions.Auth.Shared;
 
 namespace PROJETO.Domain.Validators.Auth;
 
 public static class SignInRequestValidator
 {
-    public static bool ValidateRequest(SignInRequest request)
+    public static void ValidateRequest(SignInRequest request)
     {
-        bool isValidBase64Password = !Regex.IsMatch(request.Password, AuthRegex.BASE_64_REGEX);
+        bool isValidBase64Password = Regex.IsMatch(
+            request.Password,
+            AuthRegex.BASE_64_REGEX
+        );
 
         if (!isValidBase64Password)
             throw new Base64Exception();
@@ -19,7 +23,5 @@ public static class SignInRequestValidator
 
         if (!Regex.IsMatch(request.Email, AuthRegex.EMAIL_REGEX))
             throw new InvalidEmailException();
-
-        return true;
     }
 }

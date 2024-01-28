@@ -1,8 +1,9 @@
 using PROJETO.Domain.Identities;
-using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.UseCases.Auth.Abstractions;
+using PROJETO.Domain.Exceptions.Auth;
 using PROJETO.Domain.Validators.Auth;
+using PROJETO.Domain.Repositories.Auth;
+using PROJETO.Domain.UseCases.Auth.Abstractions;
 
 namespace PROJETO.Domain.UseCases.Auth.Implementations;
 
@@ -19,22 +20,21 @@ public sealed class RegisterUseCase : IRegisterUseCase
     {
         try
         {
-            bool isValidRequest = SignUpRequestValidator.ValidateRequest(request);
+            SignUpRequestValidator.ValidateRequest(request);
 
-            if (isValidRequest)
+            return new ResultIdentity
             {
-                return new ResultIdentity
-                {
-                    IsValid = true,
-                    Data = await _repository.SignUpAsync(request)
-                };
-            }
-
-            return new ResultIdentity { IsValid = false };
+                StatusCode = StatusCodeIdentity.CREATED,
+                Data = await _repository.SignUpAsync(request)
+            };
         }
-        catch
+        catch (AuthException e)
         {
-            throw new Exception();
+            return new ResultIdentity
+            {
+                StatusCode = StatusCodeIdentity.BAD_REQUEST,
+                Data = e.Message
+            };
         }
     }
 }
