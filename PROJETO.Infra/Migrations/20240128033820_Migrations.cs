@@ -36,9 +36,9 @@ namespace PROJETO.Infra.Migrations
                     Email = table.Column<string>(type: "varchar(40)", nullable: false),
                     Password = table.Column<string>(type: "varchar(84)", nullable: false),
                     BirthDay = table.Column<DateTime>(type: "date", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false, defaultValue: 20)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    RoleId = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
@@ -58,6 +58,12 @@ namespace PROJETO.Infra.Migrations
                     { 1, "admin" },
                     { 2, "user" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",

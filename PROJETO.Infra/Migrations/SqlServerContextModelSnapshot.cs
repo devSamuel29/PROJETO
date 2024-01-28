@@ -100,6 +100,9 @@ namespace PROJETO.Infra.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users", (string)null);

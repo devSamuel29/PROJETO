@@ -12,7 +12,7 @@ using PROJETO.Infra.Database;
 namespace PROJETO.Infra.Migrations
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20240123235147_Migrations")]
+    [Migration("20240128033820_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -70,8 +70,10 @@ namespace PROJETO.Infra.Migrations
                         .HasColumnName("BirthDay");
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("CreatedAt");
+                        .HasColumnName("CreatedAt")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -91,13 +93,18 @@ namespace PROJETO.Infra.Migrations
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(20);
+                        .HasDefaultValue(1);
 
                     b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasColumnName("UpdatedAt");
+                        .HasColumnName("UpdatedAt")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
