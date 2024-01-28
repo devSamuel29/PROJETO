@@ -17,7 +17,7 @@ public class SqlServerContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=localhost;Initial Catalog=master;User Id=sa;Password=@Sdfl29052003;Encrypt=True;TrustServerCertificate=True"
+            "Server=localhost;Initial Catalog=PROJETO;User Id=sa;Password=@Sdfl29052003;Encrypt=True;TrustServerCertificate=True"
         );
     }
 
