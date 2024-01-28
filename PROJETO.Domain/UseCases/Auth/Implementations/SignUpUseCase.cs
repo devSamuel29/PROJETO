@@ -7,13 +7,13 @@ using PROJETO.Domain.Validators.Auth.Abstractions;
 
 namespace PROJETO.Domain.UseCases.Auth.Implementations;
 
-public sealed class RegisterUseCase : IRegisterUseCase
+public sealed class SignUpUseCase : ISignUpUseCase
 {
     public IAuthRepository _repository;
 
     private readonly ISignUpRequestValidator _signUpRequestValidator;
 
-    public RegisterUseCase(
+    public SignUpUseCase(
         IAuthRepository repository,
         ISignUpRequestValidator signUpRequestValidator
     )
@@ -27,11 +27,11 @@ public sealed class RegisterUseCase : IRegisterUseCase
         try
         {
             _signUpRequestValidator.ValidateRequest(request);
-
+            JwtIdentity token = await _repository.SignUpAsync(request);
             return new ResultIdentity
             {
                 StatusCode = StatusCodeIdentity.CREATED,
-                Data = await _repository.SignUpAsync(request)
+                Data = token
             };
         }
         catch (AuthException e)

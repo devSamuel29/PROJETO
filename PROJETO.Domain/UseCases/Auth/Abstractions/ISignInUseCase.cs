@@ -3,7 +3,7 @@ using PROJETO.Domain.Request.Auth;
 
 namespace PROJETO.Domain.UseCases.Auth.Abstractions;
 
-public interface IRegisterUseCase
-{
-    Task<ResultIdentity> SignUp(SignUpRequest request);
+public interface ISignInUseCase 
+{ 
+    Task<ResultIdentity> SignIn(SignInRequest request);
 }

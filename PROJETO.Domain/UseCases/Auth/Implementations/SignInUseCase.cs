@@ -7,13 +7,13 @@ using PROJETO.Domain.Validators.Auth.Abstractions;
 
 namespace PROJETO.Domain.UseCases.Auth.Implementations;
 
-public sealed class LoginUseCase : ILoginUseCase
+public sealed class SignInUseCase : ISignInUseCase
 {
     private readonly IAuthRepository _repository;
 
     private readonly ISignInRequestValidator _signInRequestValidator;
 
-    public LoginUseCase(
+    public SignInUseCase(
         IAuthRepository repository,
         ISignInRequestValidator signInRequestValidator
     )
@@ -32,7 +32,7 @@ public sealed class LoginUseCase : ILoginUseCase
             return new ResultIdentity
             {
                 StatusCode = StatusCodeIdentity.SUCCESS,
-                Data = token.Token
+                Data = token
             };
         }
         catch (AuthException e)
