@@ -35,7 +35,7 @@ public sealed class AuthRepository : IAuthRepository
     {
         try
         {
-            UserModel? model = await _userDataSource.ReadByEmailAsync(request.Email!);
+            UserModel? model = await _userDataSource.ReadByEmailAsync(request.Email);
 
             if (model is not null)
             {
@@ -54,9 +54,9 @@ public sealed class AuthRepository : IAuthRepository
 
             throw new Exception();
         }
-        catch
+        catch(Exception e)
         {
-            throw new Exception();
+            throw new Exception(e.Message);
         }
     }
 
