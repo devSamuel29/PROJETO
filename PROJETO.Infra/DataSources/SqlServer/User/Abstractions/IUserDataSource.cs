@@ -1,10 +1,10 @@
 using PROJETO.Domain.Models.User;
 
-namespace PROJETO.Infra.DataSources.Abstractions.SqlServer.Auth;
+namespace PROJETO.Infra.DataSources.SqlServer.User.Abstractions;
 
 public interface IUserDataSource
 {
     Task<UserModel> CreateAsync(UserModel model);
 
-    Task<UserModel?> ReadByEmailAsync(string Email);
+    Task<UserModel> ReadByEmailAsync(string Email);
 }

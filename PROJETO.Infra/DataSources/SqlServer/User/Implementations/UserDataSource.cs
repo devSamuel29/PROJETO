@@ -1,12 +1,11 @@
-using System.IdentityModel.Tokens.Jwt;
-
 using Microsoft.EntityFrameworkCore;
 
-using PROJETO.Infra.Database;
 using PROJETO.Domain.Models.User;
-using PROJETO.Infra.DataSources.Abstractions.SqlServer.Auth;
 
-namespace PROJETO.Infra.DataSources.Implementations;
+using PROJETO.Infra.Database;
+using PROJETO.Infra.DataSources.SqlServer.User.Abstractions;
+
+namespace PROJETO.Infra.DataSources.SqlServer.User.Implementations;
 
 public class UserDataSource : IUserDataSource
 {
@@ -24,9 +23,9 @@ public class UserDataSource : IUserDataSource
         return result.Entity;
     }
 
-    public async Task<UserModel?> ReadByEmailAsync(string email)
+    public async Task<UserModel> ReadByEmailAsync(string email)
     {
-        UserModel? userModel = await _sqlServerContext.Users.FirstOrDefaultAsync(
+        UserModel userModel = await _sqlServerContext.Users.FirstAsync(
             user => user.Email == email
         );
         return userModel;
