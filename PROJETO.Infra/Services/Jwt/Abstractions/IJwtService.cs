@@ -7,9 +7,13 @@ namespace PROJETO.Infra.Services.Jwt.Abstractions;
 
 public interface IJwtService
 {
-    JwtSecurityToken GenerateToken(List<Claim> authClaim);
+    JwtSecurityToken GenerateAccessToken(List<Claim> authClaim);
 
-    List<Claim> GenerateClaims(UserModel userModel);
+    JwtSecurityToken GenerateAccessToken(UserModel model);
+
+    string GenerateRefreshToken();
+
+    IList<Claim> GenerateClaims(UserModel userModel);
 
     string JwtToString(JwtSecurityToken token);
 
