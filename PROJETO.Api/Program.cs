@@ -20,6 +20,7 @@ using PROJETO.Infra.Services.Ecrypters.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Implementations;
 using PROJETO.Infra.Services.Jwt.Abstractions;
 using PROJETO.Infra.Services.Jwt.Implementations;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +90,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<SqlServerContext>();
+await dbContext.Database.MigrateAsync();
 
 if (app.Environment.IsDevelopment())
 {

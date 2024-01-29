@@ -14,9 +14,8 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=mssql-server,1433;Database=PROJETO_DB;User Id=SA;Password=@Sdfl29052003;Encrypt=True;TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=Server=mssql-server;User Id=sa;Password=@Sdfl29052003;Encrypt=True;TrustServerCertificate=True
       - ASPNETCORE_URLS=http://+:80
-
     ports:
       - "8080:80"
     networks:
