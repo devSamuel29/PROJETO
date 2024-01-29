@@ -1,7 +1,12 @@
 # Introdução
 Projeto voltado para estudo de arquitetura limpa, Domain Driven Design (DDD), utilizando o framework ASP.NET Core e ORM EntityFrameworkCore para o desenvolvimento. Projeto criado para simular o funcionamento de um E-Commerce.
 
-## Autenticação
+# Como rodar?
+- docker build . -t projeto_ddd
+- docker-compose up
+
+## Endpoints
+
 ### Login:
 ***VIA POST***
 ```csharp
