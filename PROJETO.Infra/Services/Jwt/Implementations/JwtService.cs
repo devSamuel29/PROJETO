@@ -5,8 +5,9 @@ using System.IdentityModel.Tokens.Jwt;
 
 using Microsoft.IdentityModel.Tokens;
 
-using PROJETO.Domain.Models.User;
+using PROJETO.Domain.Models;
 using PROJETO.Infra.Services.Jwt.Abstractions;
+using PROJETO.Domain.Identities.Jwt;
 
 namespace PROJETO.Infra.Services.Jwt.Implementations;
 
@@ -16,10 +17,11 @@ public class JwtService : IJwtService
     {
         return new List<Claim>()
         {
-            new(JwtRegisteredClaimNames.Sub, userModel.Id.ToString()),
-            new(JwtRegisteredClaimNames.UniqueName, userModel.Name),
-            new(JwtRegisteredClaimNames.Email, userModel.Email),
-            new(JwtRegisteredClaimNames.Birthdate, userModel.BirthDay.ToString())
+            new(JwtClaimsNameIdentity.Id, userModel.Id.ToString()),
+            new(JwtClaimsNameIdentity.Name, userModel.Name),
+            new(JwtClaimsNameIdentity.Email, userModel.Email),
+            new(JwtClaimsNameIdentity.BirthDay, userModel.BirthDay.ToString()),
+            new(JwtClaimsNameIdentity.Role, userModel.Role.Name)
         };
     }
 
@@ -86,3 +88,4 @@ public class JwtService : IJwtService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
+

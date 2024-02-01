@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 
-using PROJETO.Domain.Models.User;
+using PROJETO.Domain.Models;
 
 namespace PROJETO.Infra.Services.Jwt.Abstractions;
 
