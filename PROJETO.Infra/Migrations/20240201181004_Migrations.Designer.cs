@@ -12,7 +12,7 @@ using PROJETO.Infra.Database;
 namespace PROJETO.Infra.Migrations
 {
     [DbContext(typeof(SqlServerContext))]
-    [Migration("20240128033820_Migrations")]
+    [Migration("20240201181004_Migrations")]
     partial class Migrations
     {
         /// <inheritdoc />
@@ -93,7 +93,7 @@ namespace PROJETO.Infra.Migrations
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasDefaultValue(2);
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()

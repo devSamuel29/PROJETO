@@ -38,7 +38,7 @@ namespace PROJETO.Infra.Migrations
                     BirthDay = table.Column<DateTime>(type: "date", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    RoleId = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                    RoleId = table.Column<int>(type: "int", nullable: false, defaultValue: 2)
                 },
                 constraints: table =>
                 {

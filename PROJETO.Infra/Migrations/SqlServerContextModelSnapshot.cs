@@ -90,7 +90,7 @@ namespace PROJETO.Infra.Migrations
                     b.Property<int>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasDefaultValue(2);
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
