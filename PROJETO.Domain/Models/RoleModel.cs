@@ -1,4 +1,5 @@
-namespace PROJETO.Domain.Models.User;
+
+namespace PROJETO.Domain.Models;
 
 public class RoleModel
 {
