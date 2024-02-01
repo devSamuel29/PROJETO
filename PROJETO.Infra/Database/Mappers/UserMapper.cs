@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using PROJETO.Domain.Enuns.Role;
-using PROJETO.Domain.Models.User;
+using PROJETO.Domain.Models;
 
 namespace PROJETO.Infra.Mappers;
 
