@@ -1,7 +1,8 @@
-using System.Text.RegularExpressions;
-
+using PROJETO.Domain.Identities;
+using PROJETO.Domain.Notifiers.Auth;
+using PROJETO.Domain.Notifiers.Auth.SignUp;
+using PROJETO.Domain.Notifiers.Auth.Shared;
 using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.Exceptions.Auth.Shared;
 using PROJETO.Domain.Validators.Auth.Shared;
 using PROJETO.Domain.Validators.Auth.Abstractions;
 
@@ -9,108 +10,115 @@ namespace PROJETO.Domain.Validators.Implementations;
 
 public class SignUpRequestValidator : ISignUpRequestValidator
 {
-    public void ValidateRequest(SignUpRequest request)
+    public ValidationResult ValidateRequest(SignUpRequest request)
     {
+        ValidationResult validationResult = new ValidationResult();
+        
+        AuthNotifier? resultName = ValidateName(request.Name);
+        AuthNotifier? resultEmail = ValidateEmail(request.Email);
+        AuthNotifier? resultPassword = ValidatePassword(request.Password);
+        AuthNotifier? resultBirthday = ValidateBirthDay(request.BirthDay);
+
+        if (resultName is not null)
+            validationResult.Notifiers.Add(resultName);
+
+        if (resultEmail is not null)
+            validationResult.Notifiers.Add(resultEmail);
+
+        if (resultPassword is not null)
+            validationResult.Notifiers.Add(resultPassword);
+
+        if (resultBirthday is not null)
+            validationResult.Notifiers.Add(resultBirthday);
+
+        return validationResult;
+    }
+
+    public static AuthNotifier? ValidateName(string name)
+    {
+        if (name.Length <= 0)
+            return new EmptyNameNotifier();
+
+        if (AuthRegex.Number().IsMatch(name))
+            return new InvalidNameNotifier();
+
+        if (AuthRegex.SpecialChar().IsMatch(name))
+            return new InvalidNameNotifier();
+
+        int minLengthName = 5;
+
+        if (name.Length < minLengthName)
+            return new InvalidNameNotifier();
+
+        int maxLengthName = 40;
+
+        if (name.Length > maxLengthName)
+            return new InvalidNameNotifier();
+
+        return null;
+    }
+
+    public static AuthNotifier? ValidateEmail(string email)
+    {
+        if (email.Length <= 0)
+            return new EmptyEmailNotifier();
+
+        if (!AuthRegex.Email().IsMatch(email))
+            return new InvalidEmailNotifier();
+
+        return null;
+    }
+
+    public static AuthNotifier? ValidatePassword(string password)
+    {
+        if (password.Length <= 0)
+            return new EmptyPasswordNotifier();
+
         try
         {
-            string decodedPassword = System.Text.Encoding.UTF8.GetString(
-                Convert.FromBase64String(request.Password)
+            password = System.Text.Encoding.UTF8.GetString(
+                Convert.FromBase64String(password)
             );
-
-            request.Password = decodedPassword;
         }
         catch (FormatException)
         {
-            throw new Base64Exception();
+            return new Base64Notifier();
         }
 
         int minimumPasswordLenght = 8;
 
-        bool hasMinPasswordLenght = request.Password.Length < minimumPasswordLenght;
-
-        if (hasMinPasswordLenght)
-            throw new InvalidPasswordException();
+        if (password.Length < minimumPasswordLenght)
+            return new InvalidPasswordNotifier();
 
         int maximumPasswordLenght = 128;
 
-        bool hasMaxPasswordLength = request.Password.Length > maximumPasswordLenght;
+        if (password.Length > maximumPasswordLenght)
+            return new InvalidPasswordNotifier();
 
-        if (hasMaxPasswordLength)
-            throw new InvalidPasswordException();
+        if (!AuthRegex.Number().IsMatch(password))
+            return new InvalidPasswordNotifier();
 
-        bool hasNumberInPassword = Regex.IsMatch(
-            request.Password,
-            AuthRegex.NUMBER_REGEX
-        );
+        if (!AuthRegex.SpecialChar().IsMatch(password))
+            return new InvalidPasswordNotifier();
 
-        if (!hasNumberInPassword)
-            throw new InvalidPasswordException();
+        if (!AuthRegex.UpperCase().IsMatch(password))
+            return new InvalidPasswordNotifier();
 
-        bool hasSpecialChar = Regex.IsMatch(
-            request.Password,
-            AuthRegex.SPECIAL_CHARACTER_REGEX
-        );
+        return null;
+    }
 
-        if (!hasSpecialChar)
-            throw new InvalidPasswordException();
+    public static AuthNotifier? ValidateBirthDay(string date)
+    {
+        if (!DateTime.TryParse(date, out DateTime result))
+        {
+            return new InvalidBirthDayNotifier();
+        }
 
-        bool hasUpperCase = Regex.IsMatch(request.Password, AuthRegex.UPPERCASE_REGEX);
+        if ((DateTime.Now - result).TotalDays < 365 * 18)
+        {
+            return new InvalidBirthDayNotifier();
+        }
 
-        if (!hasUpperCase)
-            throw new InvalidPasswordException();
-
-        bool isValidEmail = Regex.IsMatch(request.Email, AuthRegex.EMAIL_REGEX);
-
-        if (!isValidEmail)
-            throw new InvalidEmailException();
-
-        string formattedEmail = request.Email.Trim().ToLower();
-
-        request.Email = formattedEmail;
-
-        bool hasNumberInName = Regex.IsMatch(request.Name, AuthRegex.NUMBER_REGEX);
-
-        if (hasNumberInName)
-            throw new InvalidNameException();
-
-        bool hasSpecialCharInName = Regex.IsMatch(
-            request.Name,
-            AuthRegex.SPECIAL_CHARACTER_REGEX
-        );
-
-        if (hasSpecialCharInName)
-            throw new InvalidNameException();
-
-        int minLengthName = 5;
-
-        bool hasMinNameLength = request.Name.Length < minLengthName;
-
-        if (hasMinNameLength)
-            throw new InvalidNameException();
-
-        int maxLengthName = 40;
-
-        bool hasMaxNameLength = request.Name.Length > maxLengthName;
-
-        if (hasMaxNameLength)
-            throw new InvalidNameException();
-
-        string formattedName = request.Name.ToLower();
-
-        request.Name = formattedName;
-
-        DateTime minDate = DateTime.MinValue;
-
-        bool hasMinDate = request.BirthDay < minDate;
-
-        if (hasMinDate)
-            throw new InvalidBirthDateException();
-
-        DateTime maxData = DateTime.UtcNow.AddYears(-18);
-
-        bool hasMaxDate = request.BirthDay > maxData;
-
-        if (hasMaxDate)
-            throw new InvalidBirthDateException();
+        return null;
     }
 }

@@ -1,6 +1,5 @@
 using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.Exceptions.Auth;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
 using PROJETO.Domain.Validators.Auth.Abstractions;
@@ -22,22 +21,31 @@ public sealed class SignInUseCase : ISignInUseCase
         _signInRequestValidator = signInRequestValidator;
     }
 
-    public async Task<ResultIdentity> SignIn(SignInRequest request)
+    public async Task<ResultResponse> SignIn(SignInRequest request)
     {
         try
         {
-            _signInRequestValidator.ValidateRequest(request);
+            ValidationResult validationResult = _signInRequestValidator.ValidateRequest(
+                request
+            );
+
+            if (validationResult.HasNotification)
+                return new ResultResponse
+                {
+                    StatusCode = StatusCodeIdentity.BAD_REQUEST,
+                    Data = validationResult.Notifiers
+                };
 
             JwtIdentity token = await _repository.SignInAsync(request);
-            return new ResultIdentity
+            return new ResultResponse
             {
                 StatusCode = StatusCodeIdentity.SUCCESS,
                 Data = token
             };
         }
-        catch (AuthException e)
+        catch (Exception e)
         {
-            return new ResultIdentity
+            return new ResultResponse
             {
                 StatusCode = StatusCodeIdentity.BAD_REQUEST,
                 Data = e.Message

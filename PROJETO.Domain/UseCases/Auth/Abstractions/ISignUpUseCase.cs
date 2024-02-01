@@ -5,5 +5,5 @@ namespace PROJETO.Domain.UseCases.Auth.Abstractions;
 
 public interface ISignUpUseCase
 {
-    Task<ResultIdentity> SignUp(SignUpRequest request);
+    Task<ResultResponse> SignUp(SignUpRequest request);
 }

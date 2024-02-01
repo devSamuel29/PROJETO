@@ -1,6 +1,5 @@
 using PROJETO.Domain.Identities;
 using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.Exceptions.Auth;
 using PROJETO.Domain.Repositories.Auth;
 using PROJETO.Domain.UseCases.Auth.Abstractions;
 using PROJETO.Domain.Validators.Auth.Abstractions;
@@ -22,21 +21,25 @@ public sealed class SignUpUseCase : ISignUpUseCase
         _signUpRequestValidator = signUpRequestValidator;
     }
 
-    public async Task<ResultIdentity> SignUp(SignUpRequest request)
+    public async Task<ResultResponse> SignUp(SignUpRequest request)
     {
         try
         {
-            _signUpRequestValidator.ValidateRequest(request);
+            ValidationResult result = _signUpRequestValidator.ValidateRequest(request);
+
+            if (result.HasNotification)
+                return new ResultResponse { StatusCode = 400, Data = result.Notifiers };
+
             JwtIdentity token = await _repository.SignUpAsync(request);
-            return new ResultIdentity
+            return new ResultResponse
             {
                 StatusCode = StatusCodeIdentity.CREATED,
                 Data = token
             };
         }
-        catch (AuthException e)
+        catch (Exception e)
         {
-            return new ResultIdentity
+            return new ResultResponse
             {
                 StatusCode = StatusCodeIdentity.BAD_REQUEST,
                 Data = e.Message
