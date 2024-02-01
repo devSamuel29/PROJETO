@@ -1,4 +1,4 @@
-using PROJETO.Domain.Models.User;
+using PROJETO.Domain.Models;
 
 namespace PROJETO.Infra.DataSources.SqlServer.User.Abstractions;
 
