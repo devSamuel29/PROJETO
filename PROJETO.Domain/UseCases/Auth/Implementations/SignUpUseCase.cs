@@ -28,7 +28,11 @@ public sealed class SignUpUseCase : ISignUpUseCase
             ValidationResult result = _signUpRequestValidator.ValidateRequest(request);
 
             if (result.HasNotification)
-                return new ResultResponse { StatusCode = 400, Data = result.Notifiers };
+                return new ResultResponse
+                {
+                    StatusCode = StatusCodeIdentity.BAD_REQUEST,
+                    Data = result.Notifiers
+                };
 
             JwtIdentity token = await _repository.SignUpAsync(request);
             return new ResultResponse
