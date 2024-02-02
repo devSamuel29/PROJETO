@@ -8,5 +8,5 @@ public class SignUpRequest
 
     public string Password { get; set; } = null!;
 
-    public DateTime BirthDay { get; set; }
+    public string BirthDay { get; set; } = null!;
 }
