@@ -22,26 +22,26 @@ public sealed class AuthController : ControllerBase
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn(SignInRequest signInRequest)
     {
-        ResultIdentity result = await _signInUseCase.SignIn(signInRequest);
+        ResultResponse result = await _signInUseCase.SignIn(signInRequest);
 
         return result.StatusCode switch
         {
-            StatusCodeIdentity.SUCCESS => Ok(result.Data),
-            StatusCodeIdentity.BAD_REQUEST => BadRequest(result.Data),
-            _ => (IActionResult)StatusCode(StatusCodeIdentity.ERROR, result.Data),
+            StatusCodeIdentity.SUCCESS => Ok(result),
+            StatusCodeIdentity.BAD_REQUEST => BadRequest(result),
+            _ => StatusCode(StatusCodeIdentity.ERROR, result),
         };
     }
 
     [HttpPost("sign-up")]
     public async Task<IActionResult> SignUp(SignUpRequest signUpRequest)
     {
-        ResultIdentity result = await _signUpUseCase.SignUp(signUpRequest);
-
+        ResultResponse result = await _signUpUseCase.SignUp(signUpRequest);
+    
         return result.StatusCode switch
         {
-            StatusCodeIdentity.CREATED => Created("localhost", result.Data),
-            StatusCodeIdentity.BAD_REQUEST => BadRequest(result.Data),
-            _ => StatusCode(StatusCodeIdentity.ERROR, result.Data),
+            StatusCodeIdentity.CREATED => Created("localhost", result),
+            StatusCodeIdentity.BAD_REQUEST => BadRequest(result),
+            _ => StatusCode(StatusCodeIdentity.ERROR, result),
         };
     }
 }
