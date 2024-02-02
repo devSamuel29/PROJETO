@@ -6,5 +6,5 @@ public interface IUserDataSource
 {
     Task<UserModel> CreateAsync(UserModel model);
 
-    Task<UserModel> ReadByEmailAsync(string Email);
+    Task<UserModel?> ReadByEmailAsync(string Email);
 }

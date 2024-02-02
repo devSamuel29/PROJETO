@@ -1,6 +1,6 @@
-using PROJETO.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
+using PROJETO.Domain.Models;
 using PROJETO.Infra.Database;
 using PROJETO.Infra.DataSources.SqlServer.User.Abstractions;
 
@@ -19,10 +19,14 @@ public class UserDataSource : IUserDataSource
     {
         var result = await _sqlServerContext.Users.AddAsync(model);
         await _sqlServerContext.SaveChangesAsync();
-        return await ReadByEmailAsync(result.Entity.Email);
+        UserModel userModel = await _sqlServerContext.Users
+            .Include(p => p.Role)
+            .FirstAsync(m => m.Id == model.Id);
+
+        return userModel;
     }
 
-    public async Task<UserModel> ReadByEmailAsync(string email)
+    public async Task<UserModel?> ReadByEmailAsync(string email)
     {
         UserModel userModel = await _sqlServerContext.Users
             .AsQueryable()
