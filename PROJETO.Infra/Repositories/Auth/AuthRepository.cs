@@ -1,10 +1,10 @@
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.EntityFrameworkCore;
 
 using PROJETO.Domain.Identities;
-using PROJETO.Domain.Models.User;
+using PROJETO.Domain.Models;
 using PROJETO.Domain.Request.Auth;
-using PROJETO.Domain.Adapters.User;
 using PROJETO.Domain.Repositories.Auth;
+using PROJETO.Domain.Exceptions.User;
 
 using PROJETO.Infra.Services.Jwt.Abstractions;
 using PROJETO.Infra.Services.Ecrypters.Abstractions;
@@ -35,7 +35,9 @@ public sealed class AuthRepository : IAuthRepository
     {
         try
         {
-            UserModel model = await _userDataSource.ReadByEmailAsync(request.Email);
+            UserModel? model =
+                await _userDataSource.ReadByEmailAsync(request.Email)
+                ?? throw new Exception();
 
             bool result = BCrypt.Net.BCrypt.Verify(
                 text: request.Password,
@@ -43,13 +45,14 @@ public sealed class AuthRepository : IAuthRepository
             );
 
             if (!result)
-                throw new Exception();
+                throw new InvalidPasswordException();
 
-            JwtSecurityToken accessToken = _jwtService.GenerateAccessToken(model);
+            string accessToken = _jwtService.GenerateAccessToken(model).ToString();
             string refreshToken = _jwtService.GenerateRefreshToken();
+
             return new JwtIdentity
             {
-                AccessToken = _jwtService.JwtToString(accessToken),
+                AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
         }
@@ -63,21 +66,30 @@ public sealed class AuthRepository : IAuthRepository
     {
         try
         {
-            UserModel userModel = new UserAdapter().RequestToModel(request: request);
-            userModel.Password = _encrypterService.HashPassword(userModel.Password);
+            UserModel userModel = request;
+            userModel.Password = _encrypterService.HashPassword(
+                password: userModel.Password
+            );
             UserModel createdUser = await _userDataSource.CreateAsync(model: userModel);
 
-            JwtSecurityToken accessToken = _jwtService.GenerateAccessToken(createdUser);
+            string accessToken = _jwtService
+                .GenerateAccessToken(model: createdUser)
+                .ToString();
             string refreshToken = _jwtService.GenerateRefreshToken();
+
             return new JwtIdentity
             {
-                AccessToken = _jwtService.JwtToString(accessToken),
+                AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
         }
-        catch
+        catch (DbUpdateException)
         {
-            throw new Exception();
+            throw new EmailAlreadyExistsException();
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
         }
     }
 }
