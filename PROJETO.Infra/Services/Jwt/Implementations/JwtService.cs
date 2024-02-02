@@ -83,7 +83,7 @@ public class JwtService : IJwtService
         throw new NotImplementedException();
     }
 
-    public string JwtToString(JwtSecurityToken token)
+    public string ToString(JwtSecurityToken token)
     {
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
