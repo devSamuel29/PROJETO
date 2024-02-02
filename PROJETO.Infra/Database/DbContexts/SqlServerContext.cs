@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-using PROJETO.Domain.Models.User;
+using PROJETO.Domain.Models;
 
 namespace PROJETO.Infra.Database;
 
@@ -17,7 +17,7 @@ public class SqlServerContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=mssql-server;User Id=sa;Password=@Sdfl29052003;Encrypt=True;TrustServerCertificate=True"
+            @"Server=localhost;User Id=sa;Password=@Sdfl29052003;Encrypt=True;Database=PROJETO_DB;TrustServerCertificate=True"
         );
     }
 
