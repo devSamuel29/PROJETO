@@ -1,12 +1,18 @@
+using System.Text.RegularExpressions;
+
 namespace PROJETO.Domain.Validators.Auth.Shared;
 
-public static class AuthRegex
+public static partial class AuthRegex
 {
-    public const string EMAIL_REGEX = @"^[\w-.]+@([\w-]+.)+[\w-]{2,4}$";
+    [GeneratedRegex(@"^[\w-.]+@([\w-]+.)+[\w-]{2,4}$")]
+    public static partial Regex Email();
 
-    public const string NUMBER_REGEX = @"(?=.*\d)";
+    [GeneratedRegex(@"\d")]
+    public static partial Regex Number();
 
-    public const string SPECIAL_CHARACTER_REGEX = @"(?=.*[$*&@#])";
+    [GeneratedRegex(@"(?=.*[$*&@#])")]
+    public static partial Regex SpecialChar();
 
-    public const string UPPERCASE_REGEX = @"(?=.*[A-Z])";
+    [GeneratedRegex(@"(?=.*[A-Z])")]
+    public static partial Regex UpperCase();
 }

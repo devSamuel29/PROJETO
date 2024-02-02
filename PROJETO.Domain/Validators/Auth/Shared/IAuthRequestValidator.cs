@@ -1,6 +1,8 @@
+using PROJETO.Domain.Identities;
+
 namespace PROJETO.Domain.Validators.Auth.Shared;
 
 public interface IAuthRequestValidator<Request>
 {
-    void ValidateRequest(Request request);
+    ValidationResult ValidateRequest(Request request);
 }
