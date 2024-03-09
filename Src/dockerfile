@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /source
+
+COPY Src.sln .
+COPY Api/*.csproj Api/
+COPY Infra/*.csproj Infra/
+COPY Domain/*.csproj Domain/
+COPY Test/*.csproj Test/
+
+COPY . .
+
+RUN dotnet publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+COPY --from=build /source ./
+ENTRYPOINT ["dotnet", "Api.dll"]
